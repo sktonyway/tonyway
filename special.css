@@ -1,0 +1,13 @@
+/* Card Element of notes pages */
+.card{
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 1rem;
+    font-family: inter;
+}
+.card-title{
+    font-size: 1.1rem;
+
+}

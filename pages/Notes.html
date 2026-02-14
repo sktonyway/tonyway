@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../special.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html" class="nav-links">Home</a></li>
+            <li><a href="#" class="nav-links">Notes</a></li>
+            <li><a href="./Todo.html" class="nav-links">To-Do</a></li>
+            <li><a href="#" class="nav-links">Urgent</a></li>
+            <li><a href="#" class="nav-links">Finances</a></li>
+            <li> <button id="newnotes" class="nav-links">New</button></li>
+        </ul>
+    </nav>
+    <div class="section">
+        <div id="notes-grid"></div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+            
+        </div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+        </div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+        </div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+        </div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+        </div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+        </div>
+        <div class="card">
+            <div class="card-title">This is title</div>
+            this is a card
+        </div>
+    </div>
+
+</body>
+    <script>
+        // The URL where your backend is running
+const API_URL = 'http://localhost:5000/notes';
+
+/**
+ * Fetches notes from MongoDB and displays them in the grid
+ */
+async function fetchAndDisplayNotes() {
+    const notesGrid = document.getElementById('notes-grid');
+
+    try {
+        // 1. Fetch data from the GET /notes route
+        const response = await fetch(API_URL);
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const notes = await response.json();
+
+        // 2. Clear the "Loading..." text
+        notesGrid.innerHTML = '';
+
+        // 3. Check if there are any notes
+        if (notes.length === 0) {
+            notesGrid.innerHTML = '<p class="text-muted">No notes found. Create your first one above!</p>';
+            return;
+        }
+
+        // 4. Loop through notes and create the HTML cards
+        notes.forEach(note => {
+            const noteCard = document.createElement('div');
+            noteCard.className = 'card';
+            
+            // Format the date nicely
+            const date = new Date(note.createdAt).toLocaleDateString();
+
+            noteCard.innerHTML = `
+                <div class="card-title">${note.title}</div>
+                ${note.content}
+            `;
+            
+            notesGrid.appendChild(noteCard);
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        notesGrid.innerHTML = `<p style="color: red;">Failed to load notes. Is the server running?</p>`;
+    }
+}
+
+// Call the function immediately when the script loads
+fetchAndDisplayNotes();
+    </script>
+</html>

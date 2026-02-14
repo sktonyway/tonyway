@@ -1,0 +1,24 @@
+:root{
+    --color: rgb(145, 139, 139)
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+nav ul{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+nav li{
+    list-style: none;
+}
+nav a{
+   text-decoration: none; 
+   color: var(--color);
+}
+
+.section{
+    padding: 20px;
+}
