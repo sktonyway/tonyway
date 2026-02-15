@@ -1,24 +1,29 @@
-:root{
-    --color: rgb(145, 139, 139)
+:root {
+    --color: rgb(145, 139, 139);
+    --font: "Lucida Handwriting", cursive;
 }
-*{
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Inter", sans-serif;
 }
-nav ul{
+nav ul {
     display: flex;
     justify-content: center;
     gap: 20px;
 }
-nav li{
+
+nav li {
     list-style: none;
 }
-nav a{
-   text-decoration: none; 
-   color: var(--color);
+
+nav a {
+    text-decoration: none;
+    color: var(--color);
 }
 
-.section{
+.section {
     padding: 20px;
 }

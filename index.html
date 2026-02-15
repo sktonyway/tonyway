@@ -21,10 +21,25 @@
         </ul>
     </nav>
     <div class="section">
-        <h1>This is Home</h1>
-        <p>Here I am just making a check</p>
+        <h1> <span id="main-time"></span>, Sagar!</h1>
+        <h2>What to accomplish today?</h2>
     </div>
 </body>
 <script src="index.js"></script>
+<script>
+    let h1 = document.getElementById('main-time')
+    let now = new Date;
+    let time = now.getHours();
+    let isMorning = (time) => {
+        if (time >= 4 && time <= 12) {
+            h1.textContent = "Good Morning";
+        } else if (time > 12 && time <= 16) {
+            h1.textContent = "Good Afternoon";
+        } else if (time > 16 && time <= 20) {
+            h1.textContent = "Good Evening";
+        } else h1.textContent = "Good Night";
+    }
+    isMorning(time);
+</script>
 
 </html>
