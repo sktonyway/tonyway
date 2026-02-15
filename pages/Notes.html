@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../special.css">
+    <style>
+        /* This is card component inside notes */
+        .card,
+        .input-text {
+            padding: 8px;
+            border: 1.5px solid black;
+            border-radius: 8px;
+            font-family: var(--font);
+        }
+
+        /* Here is the code for input option */
+        input:focus {
+            outline: none;
+        }
+
+        .input {
+
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input:focus-within .note-title {
+            display: block;
+            border: none;
+        }
+
+        .input:focus-within .input-text {
+            border: none;
+        }
+
+        .note-title {
+            display: none;
+            font-weight: bold;
+            font-size: large;
+            padding: 8px;
+        }
+
+        input {
+
+            min-width: 400px;
+
+
+            background-color: transparent;
+        }
+    </style>
 </head>
+
 <body>
     <nav>
         <ul>
@@ -18,90 +66,103 @@
             <li> <button id="newnotes" class="nav-links">New</button></li>
         </ul>
     </nav>
-    <div class="section">
-        <div id="notes-grid"></div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-            
-        </div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-        </div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-        </div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-        </div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-        </div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-        </div>
-        <div class="card">
-            <div class="card-title">This is title</div>
-            this is a card
-        </div>
+    <div class="input" id="input-container">
+        <input type="text" class="note-title" placeholder="Title">
+        <input type="text" class="input-text" name="" id="" placeholder="Start writing here...">
+        <button type="submit" id="txt-submit">-></button>
     </div>
-
+    <div class="section" id="notes-grid"> </div>
 </body>
-    <script>
-        // The URL where your backend is running
-const API_URL = 'https://tonyway-backend.vercel.app/notes';
+<script>
+    // The URL where your backend is running
+    const API_URL = 'https://tonyway-backend.vercel.app/notes';
+    /**
+     * Fetches notes from MongoDB and displays them in the grid
+     */
+    async function fetchAndDisplayNotes() {
+        const notesGrid = document.getElementById('notes-grid');
 
-/**
- * Fetches notes from MongoDB and displays them in the grid
- */
-async function fetchAndDisplayNotes() {
-    const notesGrid = document.getElementById('notes-grid');
+        try {
+            // 1. Fetch data from the GET /notes route
+            const response = await fetch(API_URL);
 
-    try {
-        // 1. Fetch data from the GET /notes route
-        const response = await fetch(API_URL);
-        
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const notes = await response.json();
+            if (!response.ok) throw new Error('Network response was not ok');
 
-        // 2. Clear the "Loading..." text
-        notesGrid.innerHTML = '';
+            const notes = await response.json();
 
-        // 3. Check if there are any notes
-        if (notes.length === 0) {
-            notesGrid.innerHTML = '<p class="text-muted">No notes found. Create your first one above!</p>';
-            return;
-        }
+            // 2. Clear the "Loading..." text
+            notesGrid.innerHTML = '';
 
-        // 4. Loop through notes and create the HTML cards
-        notes.forEach(note => {
-            const noteCard = document.createElement('div');
-            noteCard.className = 'card';
-            
-            // Format the date nicely
-            const date = new Date(note.createdAt).toLocaleDateString();
+            // 3. Check if there are any notes
+            if (notes.length === 0) {
+                notesGrid.innerHTML = '<p class="text-muted">No notes found. Create your first one above!</p>';
+                return;
+            }
 
-            noteCard.innerHTML = `
+            // 4. Loop through notes and create the HTML cards
+            notes.forEach(note => {
+                const noteCard = document.createElement('div');
+                noteCard.className = 'card';
+
+                // Format the date nicely
+                const date = new Date(note.createdAt).toLocaleDateString();
+
+                noteCard.innerHTML = `
                 <div class="card-title">${note.title}</div>
                 ${note.content}
             `;
-            
-            notesGrid.appendChild(noteCard);
-        });
 
-    } catch (error) {
-        console.error('Error:', error);
-        notesGrid.innerHTML = `<p style="color: red;">Failed to load notes. Is the server running?</p>`;
+                notesGrid.appendChild(noteCard);
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            notesGrid.innerHTML = `<p style="color: red;">Failed to load notes. Is the server running?</p>`;
+        }
+    }
+
+    // Call the function immediately when the script loads
+    fetchAndDisplayNotes();
+
+    const container = document.getElementById('input-container');
+const titleInput = document.querySelector('.note-title');
+const contentInput = document.querySelector('.input-text');
+
+
+
+// We use a "Focus Out" event on the container
+container.addEventListener('focusout', (event) => {
+    // Check if the thing the user clicked is still inside our container
+    // If it's outside, we save!
+    setTimeout(() => {
+        if (!container.contains(document.activeElement)) {
+            saveNote();
+        }
+    }, 10); 
+});
+
+// Your Backend Save Function
+function saveNote() {
+    const title = titleInput.value.trim();
+    const content = contentInput.value.trim();
+
+    // Only save if there is actually text to save
+    if (title !== "" || content !== "") {
+        console.log("Saving to Backend:", { title, content });
+
+         fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: title, content: content, category: "Personal" })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Optional: Clear inputs after saving
+            titleInput.value = '';
+            contentInput.value = '';
+        });
     }
 }
+</script>
 
-// Call the function immediately when the script loads
-fetchAndDisplayNotes();
-    </script>
 </html>

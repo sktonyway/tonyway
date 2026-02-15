@@ -9,6 +9,10 @@
     box-sizing: border-box;
     font-family: "Inter", sans-serif;
 }
+/*  All links in navbar */
+nav{
+    padding: 10px 0;
+}
 nav ul {
     display: flex;
     justify-content: center;
@@ -23,7 +27,10 @@ nav a {
     text-decoration: none;
     color: var(--color);
 }
-
+/* This is section. below navbar */
 .section {
     padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
 }
