@@ -22,7 +22,6 @@
         }
 
         .input {
-
             padding: 8px;
             display: flex;
             flex-direction: column;
@@ -46,10 +45,7 @@
         }
 
         input {
-
             min-width: 400px;
-
-
             background-color: transparent;
         }
     </style>
@@ -69,7 +65,6 @@
     <div class="input" id="input-container">
         <input type="text" class="note-title" placeholder="Title">
         <input type="text" class="input-text" name="" id="" placeholder="Start writing here...">
-        <button type="submit" id="txt-submit">-></button>
     </div>
     <div class="section" id="notes-grid"> </div>
 </body>
@@ -120,10 +115,9 @@
             notesGrid.innerHTML = `<p style="color: red;">Failed to load notes. Is the server running?</p>`;
         }
     }
-
     // Call the function immediately when the script loads
     fetchAndDisplayNotes();
-
+    
     const container = document.getElementById('input-container');
 const titleInput = document.querySelector('.note-title');
 const contentInput = document.querySelector('.input-text');
