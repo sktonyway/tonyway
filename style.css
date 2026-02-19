@@ -1,5 +1,5 @@
 :root {
-    --color: rgb(145, 139, 139);
+    --link-color: rgb(145, 139, 139);
     --font: "Lucida Handwriting", cursive;
 }
 
@@ -8,6 +8,14 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Inter", sans-serif;
+}
+/* All links will be idential */
+a{
+    text-decoration: none;
+    color: var(--link-color);
+}
+li{
+    list-style: none;
 }
 /*  All links in navbar */
 nav{
@@ -19,14 +27,7 @@ nav ul {
     gap: 20px;
 }
 
-nav li {
-    list-style: none;
-}
 
-nav a {
-    text-decoration: none;
-    color: var(--color);
-}
 /* This is section. below navbar */
 .section {
     padding: 20px;
@@ -34,3 +35,4 @@ nav a {
     flex-wrap: wrap;
     gap: 4px;
 }
+

@@ -1,22 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="../style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      .section div {
+        width: 100%;
+        max-width: 450px;
+      }
+      #to-do-container li {
+        font-size: 2rem;
+      }
+      #to-do-container .done {
+        text-decoration: line-through;
+        color: var(--link-color);
+        transition: all 0.3s ease;
+      }
+      #to-do-container .highlight{
+        background-color: rgba(255, 0, 0, 0.549);
+      }
+      .containers {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .section {
+        height: 90vh;
+      }
+      #items {
+        display: flex;
+        justify-content: center;       
+      }
+      #sections {
+        padding: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      #sections button {
+        width: 15px;
+        height: 15px;
+        border: 4px solid black;
+        background-color: white;
+        border-radius: 50%;
+      }
+      @media screen and (max-width: 600px) {
+        .second {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
     <nav>
-        <ul>
-            <li><a href="../index.html" class="nav-links">Home</a></li>
-            <li><a href="./Notes.html" class="nav-links">Notes</a></li>
-            <li><a href="#" class="nav-links">To-Do</a></li>
-            <li><a href="#" class="nav-links">Urgent</a></li>
-            <li><a href="#" class="nav-links">Finances</a></li>
-            <li> <button id="newnotes" class="nav-links">New</button></li>
-        </ul>
+      <ul>
+        <li><a href="../index.html" class="nav-links">Home</a></li>
+        <li><a href="./Notes.html" class="nav-links">Notes</a></li>
+        <li><a href="#" class="nav-links">To-Do</a></li>
+        <li><a href="#" class="nav-links">Urgent</a></li>
+        <li><a href="#" class="nav-links">Finances</a></li>
+        <li><button id="newnotes" class="nav-links">New</button></li>
+      </ul>
     </nav>
+    <div class="section">
+      <div class="containers" id="to-do-container">
+        <div id="items">
+          <ul id="todo-list">
+            <li>To make a Add button</li>
+            <li>Atleast crud</li>
+            <li>Drawer for all fields</li>
+            <li class="done">Todo page</li>
+            <li class="done">Insert Option</li>
+            <li class="done">Notes page</li>
+          </ul>
+        </div>
 
-</body>
+        <div id="sections">
+          <button></button><button></button><button></button>
+        </div>
+      </div>
+      <div class="containers second">That</div>
+      <div class="containers second">Okay</div>
+    </div>
+  </body>
+  <script src="../index.js"></script>
 </html>
