@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .tabs {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        .tabs button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        .tabs button:hover {
+            background-color: #ddd;
+        }
+
+        .tabs button.active {
+            background-color: #ccc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #bb3a3a;
+            border-top: none;
+        }
+
+        /* Todo Tab - Kanban */
+        .kanban {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            width: 30%;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .todo-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #fff;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .todo-item.done {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        /* Deadlines Tab */
+        .deadline-item {
+            padding: 8px;
+            margin: 5px 0;
+            color: white;
+        }
+
+        .high {
+            background: red;
+        }
+
+        .medium {
+            background: orange;
+        }
+
+        .low {
+            background: green;
+        }
+
+        /* Notes Tab */
+        #notes-editor {
+            border: 1px solid #ccc;
+            padding: 20px;
+            min-height: 300px;
+            outline: none;
+        }
+
+        /* Finances Tab */
+        .instrument {
+            margin: 10px 0;
+        }
+
+        /* Habits Tab */
+        .habit {
+            margin: 20px 0;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day {
+            width: 20px;
+            height: 20px;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        .day.active {
+            background: green;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="tabs">
+        <button class="tablink" onclick="openTab(event, 'overall')">Overall</button>
+        <button class="tablink" onclick="openTab(event, 'todo')">Todo</button>
+        <button class="tablink" onclick="openTab(event, 'deadlines')">Deadlines</button>
+        <button class="tablink" onclick="openTab(event, 'notes')">Notes</button>
+        <button class="tablink" onclick="openTab(event, 'finances')">Finances</button>
+        <button class="tablink" onclick="openTab(event, 'habits')">Habits</button>
+        
+    </div>
+
+    <div id="overall" class="tabcontent">
+        <h2>Overall Dashboard</h2>
+        <p id="overall-summary"></p>
+    </div>
+
+    <div id="todo" class="tabcontent">
+        <h2>Todo</h2>
+        <input type="text" id="new-todo" placeholder="Add new todo">
+        <button onclick="addTodo()">Add</button>
+        <div class="kanban">
+            <div class="column" id="todo-column">
+                <h3>To Do</h3>
+            </div>
+            <div class="column" id="doing-column">
+                <h3>Doing</h3>
+            </div>
+            <div class="column" id="done-column">
+                <h3>Done</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="deadlines" class="tabcontent">
+        <h2>Deadlines</h2>
+        <input type="text" id="new-deadline" placeholder="Deadline title">
+        <input type="date" id="deadline-date">
+        <select id="deadline-priority">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+        <button onclick="addDeadline()">Add</button>
+        <div id="deadlines-list"></div>
+    </div>
+
+    <div id="notes" class="tabcontent">
+        <h2>Notes</h2>
+        <div id="notes-editor" contenteditable="true"></div>
+    </div>
+
+    <div id="finances" class="tabcontent">
+        <h2>Finances</h2>
+        <input type="text" id="transaction-desc" placeholder="Description">
+        <input type="number" id="transaction-amount" placeholder="Amount">
+        <select id="transaction-type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+        <select id="transaction-instrument">
+            <option value="cash">Cash</option>
+            <option value="bank">Bank</option>
+            <option value="credit">Credit Card</option>
+        </select>
+        <button onclick="addTransaction()">Add</button>
+        <div id="balances"></div>
+        <div id="transactions-list"></div>
+    </div>
+
+    <div id="habits" class="tabcontent">
+        <h2>Habits</h2>
+        <input type="text" id="new-habit" placeholder="New habit name">
+        <button onclick="addHabit()">Add</button>
+        <div id="habits-list"></div>
+    </div>
+
+    <script>
+        // Local Storage Keys
+        const STORAGE_KEYS = {
+            todos: 'app_todos',
+            deadlines: 'app_deadlines',
+            notes: 'app_notes',
+            transactions: 'app_transactions',
+            habits: 'app_habits'
+        };
+
+        // Data Structures
+        let todos = loadFromStorage(STORAGE_KEYS.todos, { todo: [], doing: [], done: [] });
+        let deadlines = loadFromStorage(STORAGE_KEYS.deadlines, []);
+        let notes = loadFromStorage(STORAGE_KEYS.notes, '');
+        let transactions = loadFromStorage(STORAGE_KEYS.transactions, []);
+        let habits = loadFromStorage(STORAGE_KEYS.habits, {});
+
+        // Tab Switching
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+            if (tabName === 'todo') renderTodos();
+            if (tabName === 'deadlines') renderDeadlines();
+            if (tabName === 'notes') renderNotes();
+            if (tabName === 'finances') renderFinances();
+            if (tabName === 'habits') renderHabits();
+            if (tabName === 'overall') renderOverall();
+        }
+
+        // Load/Save Helpers
+        function loadFromStorage(key, defaultValue) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        }
+
+        function saveToStorage(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // Todo Functions
+        function addTodo() {
+            const input = document.getElementById('new-todo');
+            if (input.value.trim()) {
+                todos.todo.push({ title: input.value, done: false });
+                saveToStorage(STORAGE_KEYS.todos, todos);
+                renderTodos();
+                input.value = '';
+            }
+        }
+
+        function toggleTodo(column, index) {
+            const item = todos[column][index];
+            item.done = !item.done;
+            if (item.done && column !== 'done') {
+                todos[column].splice(index, 1);
+                todos.done.push(item);
+            }
+            saveToStorage(STORAGE_KEYS.todos, todos);
+            renderTodos();
+        }
+
+        function renderTodos() {
+            ['todo', 'doing', 'done'].forEach(col => {
+                const column = document.getElementById(`${col}-column`);
+                column.innerHTML = '<h3>' + col.charAt(0).toUpperCase() + col.slice(1) + '</h3>';
+                todos[col].forEach((todo, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'todo-item' + (todo.done ? ' done' : '');
+                    div.innerText = todo.title;
+                    div.onclick = () => toggleTodo(col, idx);
+                    column.appendChild(div);
+                });
+            });
+        }
+
+        // Note: Manual drag-drop for kanban not implemented for simplicity; assume todos start in 'todo', click to done.
+
+        // Deadlines Functions
+        function addDeadline() {
+            const title = document.getElementById('new-deadline').value.trim();
+            const date = document.getElementById('deadline-date').value;
+            const priority = document.getElementById('deadline-priority').value;
+            if (title && date) {
+                deadlines.push({ title, date, priority });
+                saveToStorage(STORAGE_KEYS.deadlines, deadlines);
+                renderDeadlines();
+                document.getElementById('new-deadline').value = '';
+                document.getElementById('deadline-date').value = '';
+            }
+        }
+
+        function renderDeadlines() {
+            const list = document.getElementById('deadlines-list');
+            list.innerHTML = '';
+            deadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
+            deadlines.forEach(dl => {
+                const div = document.createElement('div');
+                div.className = `deadline-item ${dl.priority}`;
+                div.innerText = `${dl.title} - ${dl.date}`;
+                list.appendChild(div);
+            });
+        }
+
+        // Notes Functions
+        function renderNotes() {
+            document.getElementById('notes-editor').innerHTML = notes;
+        }
+
+        document.getElementById('notes-editor').addEventListener('input', () => {
+            notes = document.getElementById('notes-editor').innerHTML;
+            saveToStorage(STORAGE_KEYS.notes, notes);
+        });
+
+        // Finances Functions
+        function addTransaction() {
+            const desc = document.getElementById('transaction-desc').value.trim();
+            const amount = parseFloat(document.getElementById('transaction-amount').value);
+            const type = document.getElementById('transaction-type').value;
+            const instrument = document.getElementById('transaction-instrument').value;
+            if (desc && !isNaN(amount)) {
+                transactions.push({ desc, amount: type === 'income' ? amount : -amount, instrument });
+                saveToStorage(STORAGE_KEYS.transactions, transactions);
+                renderFinances();
+                document.getElementById('transaction-desc').value = '';
+                document.getElementById('transaction-amount').value = '';
+            }
+        }
+
+        function renderFinances() {
+            const balancesDiv = document.getElementById('balances');
+            const list = document.getElementById('transactions-list');
+            list.innerHTML = '';
+            const balances = {};
+            transactions.forEach(tx => {
+                if (!balances[tx.instrument]) balances[tx.instrument] = 0;
+                balances[tx.instrument] += tx.amount;
+                const div = document.createElement('div');
+                div.innerText = `${tx.desc}: ${tx.amount} (${tx.instrument})`;
+                list.appendChild(div);
+            });
+            balancesDiv.innerHTML = '';
+            for (let inst in balances) {
+                const p = document.createElement('p');
+                p.innerText = `${inst}: ${balances[inst].toFixed(2)}`;
+                balancesDiv.appendChild(p);
+            }
+        }
+
+        // Habits Functions
+        function addHabit() {
+            const name = document.getElementById('new-habit').value.trim();
+            if (name) {
+                habits[name] = {}; // {date: true}
+                saveToStorage(STORAGE_KEYS.habits, habits);
+                renderHabits();
+                document.getElementById('new-habit').value = '';
+            }
+        }
+
+        function toggleHabitDay(habitName, date) {
+            if (!habits[habitName][date]) habits[habitName][date] = true;
+            else delete habits[habitName][date];
+            saveToStorage(STORAGE_KEYS.habits, habits);
+            renderHabits();
+        }
+
+        function renderHabits() {
+            const list = document.getElementById('habits-list');
+            list.innerHTML = '';
+            for (let name in habits) {
+                const div = document.createElement('div');
+                div.className = 'habit';
+                div.innerHTML = `<h3>${name}</h3>`;
+                const cal = document.createElement('div');
+                cal.className = 'calendar';
+                // Simple calendar: last 30 days for simplicity, not full year
+                const today = new Date();
+                for (let i = 29; i >= 0; i--) {
+                    const d = new Date(today);
+                    d.setDate(d.getDate() - i);
+                    const dateStr = d.toISOString().split('T')[0];
+                    const day = document.createElement('div');
+                    day.className = 'day' + (habits[name][dateStr] ? ' active' : '');
+                    day.onclick = () => toggleHabitDay(name, dateStr);
+                    cal.appendChild(day);
+                }
+                div.appendChild(cal);
+                list.appendChild(div);
+            }
+        }
+
+        // Overall Summary
+        function renderOverall() {
+            const summary = document.getElementById('overall-summary');
+            let text = '';
+            text += `Pending Todos: ${todos.todo.length + todos.doing.length}<br>`;
+            text += `Upcoming Deadlines: ${deadlines.length}<br>`;
+            text += `Notes Length: ${notes.length} characters<br>`;
+            const balances = {};
+            transactions.forEach(tx => {
+                if (!balances[tx.instrument]) balances[tx.instrument] = 0;
+                balances[tx.instrument] += tx.amount;
+            });
+            text += 'Balances:<br>';
+            for (let inst in balances) {
+                text += `${inst}: ${balances[inst].toFixed(2)}<br>`;
+            }
+            text += 'Habits:<br>';
+            for (let name in habits) {
+                const streak = Object.keys(habits[name]).length; // Simple count
+                text += `${name}: ${streak} days tracked<br>`;
+            }
+            summary.innerHTML = text;
+        }
+
+        // Initial Load
+        document.getElementsByClassName('tablink')[0].click();
+    </script>
+
+</body>
+
+</html>

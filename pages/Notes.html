@@ -1,83 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="../style.css" />
-    <style>
-      /* This is card component inside notes */
-      .card,
-      .input-text {
-        padding: 8px;
-        border: 1.5px solid black;
-        border-radius: 8px;
-        font-family: var(--font);
-      }
 
-      /* Here is the code for input option */
-      input:focus {
-        outline: none;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    #input-container {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-      .input {
-        padding: 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+    #input-container:focus-within .note-title {
+      display: block;
+      border: none;
+    }
 
-      .input:focus-within .note-title {
-        display: block;
-        border: none;
-      }
+    #input-container:focus-within .input-text {
+      border: none;
+    }
 
-      .input:focus-within .input-text {
-        border: none;
-      }
+    input:focus {
+      outline: none;
+      height: fit-content;
+    }
 
-      .note-title {
-        display: none;
-        font-weight: bold;
-        font-size: large;
-        padding: 8px;
-      }
+    input {
+      min-width: 400px;
+      background-color: transparent;
+    }
 
-      input {
-        min-width: 400px;
-        background-color: transparent;
-      }
-    </style>
-  </head>
+    /* This is card component inside notes */
+    .card,
+    .input-text {
+      padding: 8px;
+      border: 1.5px solid var(--font-color);
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: smaller;
+    }
 
-  <body>
-    <nav>
-      <ul>
-        <li><a href="../index.html" class="nav-links">Home</a></li>
-        <li><a href="#" class="nav-links">Notes</a></li>
-        <li><a href="./Todo.html" class="nav-links">To-Do</a></li>
-        <li><a href="#" class="nav-links">Urgent</a></li>
-        <li><a href="#" class="nav-links">Finances</a></li>
-        <li><button id="newnotes" class="nav-links">New</button></li>
-      </ul>
-    </nav>
-    <div class="input" id="input-container">
-      <input type="text" class="note-title" placeholder="Title" />
-      <input
-        type="text"
-        class="input-text"
-        placeholder="Start writing here..."
-      />
-    </div>
-    <div class="section" id="notes-grid">
-      <!-- <div class="card">
+    /* Here is the code for input option */
+
+
+
+    .note-title {
+      display: none;
+      font-weight: bold;
+      font-size: large;
+      padding: 8px;
+    }
+
+    #notes-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li><a href="../index.html" class="nav-links">Home</a></li>
+      <li><a href="#" class="nav-links">Notes</a></li>
+      <li><a href="./Todo.html" class="nav-links">To-Do</a></li>
+      <li><a href="#" class="nav-links">Urgent</a></li>
+      <li><a href="#" class="nav-links">Finances</a></li>
+    </ul>
+  </nav>
+  <div id="input-container">
+    <input type="text" class="note-title" placeholder="Title" />
+    <input type="text" class="input-text" placeholder="Start writing here..." />
+  </div>
+  <div id="notes-grid">
+    <!-- <div class="card">
             <div class="card-title">This is a test title</div>
             this is a wrk
         </div> -->
-    </div>
-  </body>
-  <script src="../index.js"></script>
-  <script>
-    fetchAndDisplayNotes();
-  </script>
+  </div>
+</body>
+<script src="../index.js"></script>
+<script>
+  fetchAndDisplayNotes();
+</script>
+
 </html>
