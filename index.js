@@ -3,9 +3,10 @@ const API_URL = "https://tonyway-backend.vercel.app"
 
 const NotesApi = API_URL + "/notes"
 const TodoApi = API_URL + "/todos"
+const LoginApi = API_URL + "/login"
 
 if (localStorage.getItem('authStatus') !== 'verified') {
-    window.location.href = "./pages/login.html"; // Kick them back if not logged in
+    window.location.href = "/pages/login.html"; // Kick them back if not logged in
 }
 
 

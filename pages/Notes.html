@@ -55,9 +55,33 @@
     }
 
     #notes-grid {
+
+      max-width: 95%;
+    }
+
+    .card {
+      display: inline-block;
+      height: fit-content;
+      max-width: 250px;
+      /* word-wrap: break-word; */
+      overflow-wrap: break-word;
+      break-inside: avoid;
+    }
+
+    .wrapper {
       display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
+      justify-content: center;
+    }
+
+    @media (max-width: 600px) {
+      #note-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card {
+        max-width: 45%;
+      }
     }
   </style>
 </head>
@@ -76,11 +100,13 @@
     <input type="text" class="note-title" placeholder="Title" />
     <input type="text" class="input-text" placeholder="Start writing here..." />
   </div>
-  <div id="notes-grid">
-    <!-- <div class="card">
+  <div class="wrapper">
+    <div id="notes-grid">
+      <!-- <div class="card">
             <div class="card-title">This is a test title</div>
             this is a wrk
         </div> -->
+    </div>
   </div>
 </body>
 <script src="../index.js"></script>
