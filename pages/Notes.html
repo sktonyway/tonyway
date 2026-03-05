@@ -40,7 +40,7 @@
       border: 1.5px solid var(--font-color);
       border-radius: 8px;
       font-family: var(--font-mono);
-      font-size: smaller;
+      font-size: small;
     }
 
     /* Here is the code for input option */
@@ -55,32 +55,35 @@
     }
 
     #notes-grid {
-
-      max-width: 95%;
+      column-count: 5;
+      column-gap: 8px;
     }
 
     .card {
-      display: inline-block;
-      height: fit-content;
-      max-width: 250px;
-      /* word-wrap: break-word; */
+      color: var(--font-color2);
+      width: 225px;
       overflow-wrap: break-word;
       break-inside: avoid;
+      margin-bottom: 8px;
+    }
+
+    .card .card-title {
+      font-weight: 400;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--font-color);
     }
 
     .wrapper {
       display: flex;
       justify-content: center;
+      width: 100vw;
+      padding: 18px;
     }
 
     @media (max-width: 600px) {
-      #note-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .card {
-        max-width: 45%;
+      #notes-grid {
+        column-count: 2;
       }
     }
   </style>
