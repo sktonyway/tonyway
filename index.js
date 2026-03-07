@@ -20,6 +20,7 @@ async function fetchAndDisplayNotes() {
         notes.forEach(note => {
             const noteCard = document.createElement('div');
             noteCard.className = 'card';
+            noteCard.dataset.id = `${note._id}`
             noteCard.innerHTML = `
             <div class="card-title">${note.title} </div>
             ${note.content}

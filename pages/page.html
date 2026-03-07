@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pages</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .page{
+            width: 90vw;
+            flex: 1;
+            padding: 30px;
+        }
+        input,textarea{
+            border: none;
+            width: 100%;
+            padding: 20px;
+            height: fit-content;
+            border: 1px solid white;
+        }
+        input:focus{
+            outline: none;
+            border-left: 1px solid black;
+        }
+        textarea:focus{
+            outline: none;
+        }
+        input{
+            font-size: 2.5rem;
+            font-family: serif;
+
+        }
+        textarea{
+            /* font-size: 2rem; */
+            font-size: 1.5rem;
+            height: auto;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <input type="text" name="title" id="title" placeholder="Title">
+        <br>
+        <textarea name="text" id="text" placeholder="Start Writiign Here" rows="30"></textarea>
+    </div>
+</body>
+<script>
+    let title = document.getElementById('title')
+    let text = document.getElementById('text')
+    let url = 'http://localhost:5000/notes/69a9f8e561509b096966169c'
+    let data = fetch(url).then(res => res.json())
+    
+    title.innerText = data.title
+    
+
+</script>
+</html>

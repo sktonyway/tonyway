@@ -65,6 +65,7 @@
       overflow-wrap: break-word;
       break-inside: avoid;
       margin-bottom: 8px;
+      user-select: none;
     }
 
     .card .card-title {
@@ -79,6 +80,59 @@
       justify-content: center;
       width: 100vw;
       padding: 18px;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 8px;
+      width: 100vw !important;
+      height: 100vh !important;
+      text-align: center;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .page {
+      width: 90vw;
+      flex: 1;
+      padding: 30px;
+    }
+
+    input,
+    textarea {
+      border: none;
+      width: 100%;
+      padding: 20px;
+      height: fit-content;
+      border: 1px solid white;
+    }
+
+    input:focus {
+      outline: none;
+      border-left: 1px solid black;
+    }
+
+    textarea:focus {
+      outline: none;
+    }
+
+    input {
+      font-size: 2.5rem;
+      font-family: serif;
+
+    }
+
+    textarea {
+      font-size: 1.5rem;
+      overflow-y: auto;
     }
 
     @media (max-width: 600px) {
@@ -111,10 +165,38 @@
         </div> -->
     </div>
   </div>
+  <dialog id="noteDialog">
+    <a href="#" id="closeDialog">Close</a>
+    <div class="page">
+      <input type="text" name="title" id="title" placeholder="Title">
+      <br>
+      <textarea name="text" id="text" placeholder="Start Writing Here" rows="30"></textarea>
+    </div>
+  </dialog>
 </body>
 <script src="../index.js"></script>
 <script>
   fetchAndDisplayNotes();
+  document.addEventListener("click", async (e) => {
+
+    const card = e.target.closest(".card");
+    if (!card) return;
+
+    const id = card.dataset.id;
+
+    const res = await fetch(`https://tonyway-backend.vercel.app/${id}`);
+    const note = await res.json();
+
+    document.querySelector("#title").value = note.title;
+    document.querySelector("#text").value = note.content;
+
+    document.querySelector("#noteDialog").showModal();
+  });
+
+  document.querySelector("#closeDialog").addEventListener("click", (e) => {
+    e.preventDefault()
+    document.querySelector("#noteDialog").close();
+  });
 </script>
 
 </html>
