@@ -184,7 +184,7 @@
 
     const id = card.dataset.id;
 
-    const res = await fetch(`https://tonyway-backend.vercel.app/${id}`);
+    const res = await fetch(`https://tonyway-backend.vercel.app/notes/${id}`);
     const note = await res.json();
 
     document.querySelector("#title").value = note.title;
