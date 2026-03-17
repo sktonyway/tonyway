@@ -1,4 +1,4 @@
-// const API_URL = "http://localhost:5050"
+//const API_URL = "http://localhost:5050"
 const API_URL = "https://tonyway-backend.vercel.app"
 
 const NotesApi = API_URL + "/notes"
@@ -77,14 +77,15 @@ function saveNote() {
 let selected = document.querySelector("#todo-list");
 if (selected != null) {
     selected.addEventListener("click", function (e) {
-        if (e.target.tagName === "LI") {
-            e.target.classList.toggle("done");
-        }
+    const li = e.target.closest("LI");
+    if (li && selected.contains(li)) {
+        let id = li.dataset.id;
+        deleteTodo(id)
+    }
     });
     selected.addEventListener("dblclick", (e) => {
         if (e.target.tagName === "LI") {
             e.target.classList.toggle("highlight");
         }
     });
-    console.log(selected);
 }

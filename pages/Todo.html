@@ -13,19 +13,26 @@
       justify-content: center;
       align-items: center;
     }
-    .btns{
+
+    .btns {
       display: flex;
       justify-content: center;
       gap: 20px;
     }
-    .btns button{
+
+    .btns button {
       margin-top: 20px;
     }
+
     .section li {
       font-weight: 400;
       font-size: 2rem;
       color: var(--font-color);
       user-select: none;
+    }
+
+    .highlight {
+      background-color: rgba(255, 0, 0, .3);
     }
 
     .section button {
@@ -56,6 +63,22 @@
   </nav>
   <div class="section">
     <div id="items">
+      <ul id="todo-list" class="first-ul">
+        <li>To make a Add button</li>
+        <li>Atleast crud</li>
+        <li>Drawer for all fields</li>
+        <li class="done">Todo page</li>
+        <li class="done">Insert Option</li>
+        <li class="done">Notes page</li>
+      </ul>
+      <div class="btns">
+
+        <button id="fetchtodos"></button><button id="addtodos"></button><button></button>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div id="items">
       <ul id="todo-list">
         <li>To make a Add button</li>
         <li>Atleast crud</li>
@@ -70,7 +93,75 @@
       </div>
     </div>
   </div>
+  <div class="section">
+    <div id="items">
+      <ul id="todo-list">
+        <li>To make a Add button</li>
+        <li>Atleast crud</li>
+        <li>Drawer for all fields</li>
+        <li class="done">Todo page</li>
+        <li class="done">Insert Option</li>
+        <li class="done">Notes page</li>
+      </ul>
+      <div class="btns">
+
+        <button></button><button></button><button></button>
+      </div>
+    </div>
+  </div>
+
 </body>
 <script src="../index.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', syncNote())
+  async function syncNote() {
+    try {
+      let response = await fetch(TodoApi);
+      const todos = await response.json()
+      selected.innerHTML = '';
+      todos.forEach(element => {
+        const item = document.createElement('li');
+        item.dataset.id = `${element._id}`
+        item.innerText = `${element.title}`;
+        selected.appendChild(item)
+      });
+
+    } catch (error) {
+      console.error("Error: ", error);
+      selected.innerHTML = `<p style="color: red;"> Failed to load </p>`
+    }
+  }
+
+  let button2 = document.getElementById('addtodos');
+  button2.addEventListener('click', addTodo)
+  async function addTodo() {
+    try {
+      let mess = prompt("Enter todo");
+      if (mess.trim().length > 0) {
+        await fetch(TodoApi, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: mess,
+            content: mess
+          })
+        })
+        syncNote()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async function deleteTodo(id) {
+    let confirmation = confirm("Are you sure?");
+    if (confirmation === true) {
+      await fetch(`${TodoApi}/${id}`, {
+        method: "DELETE"
+      });
+      syncNote()
+    }
+  }
+</script>
 
 </html>
