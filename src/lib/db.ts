@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const uri = process.env.MONGO_URI;
+const uri = process.env.LOCAL_DB;
 
 if(!uri){
     throw new Error("MongoDB String required")

@@ -1,74 +1,61 @@
-"use client";
+"use client"
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
-import Form from "next/form";
-import { useState, useRef, useEffect } from "react";
-import Link from 'next/link'
 
+function Written() {
+  const [notes, setNotes] = useState([])
 
-function Page() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  const fetchNotes = async () => {
     try {
-      const response = await fetch('/api/v1/notes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content }),
-      });
-
-      setTitle('');
-      setContent('');
-
-    } catch (error) {
-      console.log(error)
+      const res = await fetch('/api/v1/notes');
+      const result = await res.json();
+      
+      // FIX: Ensure you match your API response layout. 
+      // If your API returns { success: true, data: [...] }, use result.data
+      if (result && result.data) {
+        setNotes(result.data);
+      } else if (result && result.notes) {
+        setNotes(result.notes);
+      }
+    } catch (err) {
+      console.error("Error fetching notes", err);
     }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-  }
+  };
 
   useEffect(() => {
-  if (textareaRef.current) {
-    textareaRef.current.style.height = "600px";
-    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-  }
-}, [content]);
+    fetchNotes();
+  }, []); // Explicitly empty constant array
 
+  interface Note {
+    _id: string;
+    title: string;
+    content: string;
+  }
   return (
     <>
-      <Navbar />
-      <Form onSubmit={handleSubmit} action={""} className="flex-col w-full flex items-center">
-        <div className="w-full md:w-[60%] p-2">
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className=" block w-full text-4xl md:text-6xl outline-none mb-3"
-            placeholder="Title..."
-          />
-          <textarea
-            value={content}
-            onChange={handleChange}
-            required
-            maxLength={500}
-            ref={textareaRef}
-            className="w-full text-xl md:text-3xl outline-none resize-none overflow-hidden"
-            placeholder="Start notes here ..."
-          />
+    <Navbar />
+    <div className="p-6 ">
+      <h2 className="text-xl mb-2">My Saved Notes</h2>
+      
+      {notes.length === 0 ? (
+        <div className="text-gray-400 text-sm">No notes available.</div>
+      ) : (
+        <div className="space-y-3">
+          {notes.map((note: Note) => (
+            <div 
+              key={note._id} 
+              className="p-4 border"
+            >
+              <h3 className="font-bold">{note.title}</h3>
+              <p className="text-sm">{note.content}</p>
+            </div>
+          ))}
         </div>
-        <button type="submit" className="block">Submit</button>
-        <Link href="/notes/written" className="text-[12px] text-blue-300 bg-blue-600">All notes</Link>
-        <p className="text-red-500 text-[10px]">
-          This notes thing is just for temporary showing all notes and will be scheduled later.
-        </p>
-      </Form>
+      )}
+    </div>
     </>
-  );
+
+  )
 }
 
-export default Page;
+export default Written;
