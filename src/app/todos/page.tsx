@@ -21,7 +21,7 @@ function Page() {
       <main className="grow flex justify-center items-center">
         <ul>
           {todos.map(todo =>(
-            <div key="todo._id">
+            <div key={todo._id}>
               <li onClick={() => setIsDone(!isDone)} className ={`text-4xl cursor-pointer select-none transition-all duration-200 py-2 px-4  ${ isDone ? "text-slate-400 line-through decoration-slate-400" : "font-medium"}`}>{todo.title}</li>
 
             </div>
