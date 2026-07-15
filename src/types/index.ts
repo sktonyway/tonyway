@@ -4,4 +4,5 @@ export interface Todo {
   content: string;
   isCompleted: boolean;
   priority: number;
+  date: string; // because of json serialization
 }

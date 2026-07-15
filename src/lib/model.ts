@@ -60,6 +60,10 @@ const todoSchema = new mongoose.Schema({
         type:String,
         enum:[3,2,1],
         default: 2,
+    },
+    date:{
+        type: Date,
+        default: Date.now
     }
 })
 const Todo = mongoose.models.Todo || mongoose.model("Todo", todoSchema)
