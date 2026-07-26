@@ -13,7 +13,7 @@ function Navbar({ type, buttons }: NavbarProps) {
   if (type == "write") {
     return (
       <div>
-        <div className="h-10 max-h-10 px-4 bg-red-400 border-b flex items-center justify-between">
+        <div className="h-10 max-h-10 px-4 border-b flex items-center justify-between">
           <div className="px-[8px]">
             <Link href="/" className="inline-block font-extrabold">
               Tonyway
@@ -35,7 +35,7 @@ function Navbar({ type, buttons }: NavbarProps) {
   }
   else return (
     <div>
-      <div className="h-10 max-h-10 px-4 bg-red-400 border-b flex items-center justify-between">
+      <div className="h-10 max-h-10 px-4  border-b flex items-center justify-between">
         <div className="px-[8px]">
 
           <Link href="/" className="inline-block font-extrabold">
