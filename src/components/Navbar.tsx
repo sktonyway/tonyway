@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 interface NavbarProps {
@@ -15,7 +16,7 @@ function Navbar({ type, buttons }: NavbarProps) {
       <div>
         <div className="h-10 max-h-10 px-4 border-b flex items-center justify-between">
           <div className="px-[8px]">
-            <Link href="/" className="inline-block font-extrabold">
+            <Link href="/dashboard" className="inline-block font-extrabold">
               Tonyway
             </Link>
           </div>
@@ -38,7 +39,7 @@ function Navbar({ type, buttons }: NavbarProps) {
       <div className="h-10 max-h-10 px-4  border-b flex items-center justify-between">
         <div className="px-[8px]">
 
-          <Link href="/" className="inline-block font-extrabold">
+          <Link href="/dashboard" className="inline-block font-extrabold">
             Tonyway
           </Link>
         </div>
@@ -52,6 +53,7 @@ function Navbar({ type, buttons }: NavbarProps) {
           <Link href="/todos" className="inline-block">
             Todos
           </Link>
+          <UserButton />
         </div>
       </div>
     </div>
