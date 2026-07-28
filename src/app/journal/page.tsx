@@ -15,7 +15,6 @@ function Page() {
       if (result && result.journals) {
         setJournal(result.journals);
       }
-      console.log(result.journals)
     } catch (err) {
       console.error("Error fetching notes", err);
     }
