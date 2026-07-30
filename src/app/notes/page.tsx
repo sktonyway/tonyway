@@ -33,26 +33,26 @@ function Written() {
   }
   return (
     <>
-    <Navbar />
-    <div className="p-6 ">
-      <h2 className="text-xl mb-2">My Saved Notes</h2>
-      
-      {notes.length === 0 ? (
-        <div className="text-gray-400 text-sm">No notes available.</div>
-      ) : (
-        <div className="space-y-3">
-          {notes.map((note: Note) => (
-            <div 
-              key={note._id} 
-              className="p-4 border"
-            >
-              <h3 className="font-bold">{note.title}</h3>
-              <p className="text-sm">{note.content}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+      <Navbar />
+      <div className="p-6 ">
+        <h2 className="text-xl mb-2">My Saved Notes</h2>
+
+        {notes.length === 0 ? (
+          <div className="text-gray-400 text-sm">No notes available.</div>
+        ) : (
+          <div className="space-y-3">
+            {notes.map((note: Note) => (
+              <div
+                key={note._id}
+                className="p-4 border"
+              >
+                <h3 className="font-bold">{note.title}</h3>
+                <p className="text-sm">{note.content}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </>
 
   )

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
 import { Todo } from "@/lib/model";
+import { matchClerkAndMongoUser } from "@/utils/match";
 
 export async function GET() {
     try {
-        await connectDB();
-        const todos = await Todo.find({}).sort({ isCompleted: 1, priority: -1, date: 1, createdAt: -1 });
+        const { mongo_id } = await matchClerkAndMongoUser();
+        const todos = await Todo.find({ author: mongo_id }).sort({ isCompleted: 1, priority: -1, date: 1, createdAt: -1 });
         return NextResponse.json({ todos });
     } catch (error) {
         return NextResponse.json({ success: false }, { status: 500 });
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        await connectDB();
+        const { mongo_id } = await matchClerkAndMongoUser();
 
         const newTodo = await Todo.create({
             title: title.trim(),
@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
             isCompleted,
             priority,
             ...(date && { date: new Date(date) }),
+            author: mongo_id
         });
 
         return NextResponse.json(
@@ -51,9 +52,9 @@ export async function PATCH(request: NextRequest) {
             return NextResponse.json({ error: "Todo id is required" }, { status: 400 });
         }
 
-        await connectDB();
+        const {mongo_id} = await matchClerkAndMongoUser();
 
-        const updatedTodo = await Todo.findByIdAndUpdate(_id, { $set: updateFields }, { new: true });
+        const updatedTodo = await Todo.findByIdAndUpdate({_id, author: mongo_id}, { $set: updateFields }, { new: true });
         if (!updatedTodo) {
             return NextResponse.json({ error: "Todo not found" }, { status: 404 });
         }
@@ -72,9 +73,10 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: "Todo id is required" }, { status: 400 });
         }
 
-        await connectDB();
+        const {mongo_id} = await matchClerkAndMongoUser();
 
-        const deletedTodo = await Todo.findByIdAndDelete(_id);
+
+        const deletedTodo = await Todo.findByIdAndDelete({ _id, author: mongo_id });
         if (!deletedTodo) {
             return NextResponse.json({ error: "Todo not found" }, { status: 404 });
         }

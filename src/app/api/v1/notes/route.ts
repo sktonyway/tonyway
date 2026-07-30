@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
 import { Note } from "@/lib/model";
+import { matchClerkAndMongoUser } from "@/utils/match";
 
 export async function GET() {
+
     try {
-        await connectDB();
-        const notes = await Note.find({})
+        const {mongo_id} = await matchClerkAndMongoUser();
+        const notes = await Note.find({ author: mongo_id }).sort({ createdAt: -1 })
         return NextResponse.json({ notes })
+
     } catch (error) {
         return NextResponse.json({ success: false }, { status: 500 })
     }
@@ -16,6 +18,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     try {
+        // Basic validation
         const body = request.json()
         const { title, content } = await body;
 
@@ -25,21 +28,21 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
-
-        await connectDB();
-
+        // Checks user, find their id and save their note to the database
+        const {mongo_id} = await matchClerkAndMongoUser();
         const newNote = await Note.create({
             title,
-            content
+            content,
+            author: mongo_id
         });
 
         return NextResponse.json(
-            { success: true, data: newNote },
+            { success: true, data: { title: newNote.title, content: newNote.content } },
             { status: 201 }
         );
     } catch (error) {
         console.error("Error saving data", error)
-        return NextResponse.json({success: false}, {status: 500})
+        return NextResponse.json({ success: false }, { status: 500 })
     }
 
 }

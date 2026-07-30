@@ -34,12 +34,12 @@ function Input({ titlePlaceHolder, contentPlaceHolder, submit }: NoteEditorProps
   }
   // component
   return (
-    <form id="note-form" onSubmit={handleSubmit} action={""} className="flex-col w-full flex items-center p-2">
+    <form id="note-form" onSubmit={handleSubmit} action={""} className="w-[90%] lg:w-[60%] mx-auto">
       <input
         name='title'
         value={data.title}
         onChange={handleChange}
-        className=" block w-full text-4xl md:text-6xl outline-none mb-3"
+        className=" block w-full text-4xl lg:text-[64px] outline-none my-3"
         placeholder={titlePlaceHolder}
       />
       <textarea
@@ -48,7 +48,7 @@ function Input({ titlePlaceHolder, contentPlaceHolder, submit }: NoteEditorProps
         onChange={handleChange}
         maxLength={1500}
         ref={textareaRef}
-        className="md:text-[24px] leading-[1.6] font-normal w-full outline-none resize-none overflow-hidden"
+        className="lg:text-[32px] text-2xl leading-[1.6] font-normal w-full outline-none resize-none overflow-hidden"
         placeholder={contentPlaceHolder}
       />
     </form>

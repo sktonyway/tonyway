@@ -13,10 +13,11 @@ function Page() {
       await fetch('/api/v1/notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: "include",
         body: JSON.stringify({ title: note.title, content: note.content }),
       });
       router.push('/notes')
-      
+
     } catch (error) {
       console.log(error);
     }
