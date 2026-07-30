@@ -37,7 +37,7 @@ function Page() {
 
   return (
     <>
-    <Navbar type="write" buttons={[{label:"write", onClick:handleRedirect}]}/>
+    <Navbar type="write"><button onClick={handleRedirect}>Write</button></Navbar>
     <div className="p-6 ">
       <h2 className="text-xl mb-2">My Written Journals</h2>
       

@@ -3,14 +3,14 @@ import Link from "next/link";
 
 interface NavbarProps {
   type?: string;          // The '?' means it is optional because you have a default value
-  buttons?: buttons[] // Required function
+  children?: React.ReactNode
 }
 interface buttons {
   label: string;
   onClick: () => void;
 }
 
-function Navbar({ type, buttons }: NavbarProps) {
+function Navbar({ type, children }: NavbarProps) {
   if (type == "write") {
     return (
       <div>
@@ -21,14 +21,7 @@ function Navbar({ type, buttons }: NavbarProps) {
             </Link>
           </div>
           <div className="flex gap-2">
-            {buttons && buttons.map((btn, index) => (
-              <button
-                key={index}
-                onClick={btn.onClick}
-              >
-                {btn.label}
-              </button>
-            ))}
+            {children}
           </div>
         </div>
       </div>
